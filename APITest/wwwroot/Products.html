@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Products</title>
+    <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
+   
+</head>
+<body style="background-color: #f5f7fa;">
+
+
+
+    <section class="intro h-100">
+
+
+        <div class="bg-image h-100">
+
+            <div class="container-md my-3">
+                <div class="row">
+                    <h2 class="col col-md-3"> Products List</h2>
+                    <div class="col col-md-3">
+                        <form id="frmCategory">
+                            <select id="lstCategory" class="form-select" aria-label="Default select example">
+                                <option value="-1" selected>Filter By Category</option>
+                            </select>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="mask d-flex align-items-center h-100">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body p-0">
+                                    <div class="table-responsive table-scroll" data-mdb-perfect-scrollbar="true" style="position: relative; height: 700px">
+                                        <table id="tblProducts" class="table table-striped mb-0">
+                                            <thead style="background-color: #002d72;">
+                                                <tr>
+                                                    <th scope="col">Id</th>
+                                                    <th scope="col">SKU</th>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Price</th>
+                                                    <th scope="col">IsAvailable</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Like a butterfly</td>
+                                                    <td>Boxing</td>
+                                                    <td>9:00 AM - 11:00 AM</td>
+                                                    <td>Aaron Chapman</td>
+                                                    <td><input type="checkbox" name="IsAvailable" /></td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container-md my-3">
+        <button type="button" class="btn btn-primary me-3" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#modelAdd" data-bs-whatever="@mdo">+ Add new</button>
+        <span id="TxtPageMessage" class="text-start text-danger">
+        </span>
+    </div>
+
+    <div class="modal fade" id="modelAdd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add a new product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="frmAdd">
+                    <div class="modal-body">
+
+                        <div class="mb-3">
+                            <label for="Sku" class="col-form-label">SKU:</label>
+                            <input type="text" class="form-control" id="Sku" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtName" class="col-form-label">Name:</label>
+                            <input class="form-control" id="Name" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="Description" class="col-form-label">Description:</label>
+                            <textarea class="form-control" id="Description" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Price" class="col-form-label">Price:</label>
+                            <input class="form-control" id="Price" type="number" required />
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="IsAvailable">
+                            <label class="form-check-label" for="IsAvailable">
+                                IsAvailable
+                            </label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="CategoryId" class="col-form-label">Category:</label>
+                            <select id="CategoryId" class="form-select" aria-label="Default select example" required>
+                                <option value="-1" selected>Select Category</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <div id="txtModelMessage" class="col-auto text-start text-danger">
+
+                        </div>
+                        <button id="btnClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/Products.js"></script>
+</body>
+</html>

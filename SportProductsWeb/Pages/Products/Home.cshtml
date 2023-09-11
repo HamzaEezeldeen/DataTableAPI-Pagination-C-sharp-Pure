@@ -1,0 +1,134 @@
+﻿@page
+@model SportProductsWeb.Pages.Products.HomeModel
+@{
+    ViewData["Title"] = "Products - Full";
+}
+@{
+    var parms = new Dictionary<string, string>
+            {
+                { "CurPage", Model.queryParamters.CurPage.ToString() },
+                 { "Size", Model.queryParamters.Size.ToString() },
+                 { "SortBy", Model.queryParamters.SortBy.ToString() },
+                 { "SortOrder", Model.queryParamters.SortOrder.ToString() },
+                 { "SearchTearm", Model.queryParamters.SearchTearm },
+            };
+
+}
+
+<div>
+    <h5>Manage Customers</h5>
+</div>
+<form method="get" class="">
+    <input type="hidden" name="CurPage" value="@Model.queryParamters.CurPage" />
+<div>
+    
+        <input class="form-control me-1" type="search" placeholder="Search" aria-label="Search" id="SearchTearm" 
+        name="SearchTearm" asp-for="@Model.queryParamters.SearchTearm">
+        <button class="btn btn-outline-primary" type="submit">Search</button>
+        <button class="btn btn-outline-light" type="button" onclick="document.querySelector('#divFilter').classList.toggle('d-none');">More Filter</button>
+   
+</div>
+<div id="divFilter" class="d-none">
+        <input type="number" name="MinPrice" asp-for="@Model.queryParamters.MinPrice"  placeholder="Min Price"/>
+        <input type="number" name="MaxPrice" asp-for="@Model.queryParamters.MaxPrice" placeholder="Max Price"/>
+        <button class="btn btn-outline-primary" type="submit">Apply Filter</button>
+</div>
+<div>
+    <div>
+        <table class="table table-bordered table-hover table-sm w-auto">
+            <caption>Items @Model.pageResult.FirstRowOnPage to @Model.pageResult.LastRowOnPage</caption>
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">
+                        <a asp-page="./Edit" asp-route-customerId="0">
+                            <i class="material-icons icon">+ Add Product</i>
+                        </a>
+                    </th>
+                    <th scope="colgroup" colspan="5" class="text-right">
+                            Page Size:
+                            @*@Html.DropDownListFor(m => m.queryParamters.Size, Model.PageSizeList, "-Select-", new { onchange = "submit()" })*@
+                            <select id="Size" name="Size" asp-for="@Model.queryParamters.Size" asp-items="@Model.PageSizeList" onchange="submit()"></select>
+                        
+                            Sort By:
+                            <select id="SortBy" name="SortBy" asp-for="@Model.queryParamters.SortBy" asp-items="@Model.SortList" onchange="submit()"></select>
+                            <select id="SortOrder" name="SortOrder" asp-for="@Model.queryParamters.SortOrder"  onchange="submit()">
+                                <option value="asc">A-Z</option>
+                                <option value="desc">Z-A</option>
+                            </select>
+                    </th>
+                </tr>
+                <tr>
+                    <th scope="col" class="pl-2 pr-2"> ID </th>
+                    <th scope="col" class="pl-2 pr-2"> Sku  </th>
+                    <th scope="col" class="pl-2 pr-2"> Name  </th>
+                    <th scope="col" class="pl-2 pr-2"> Price  </th>                  
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model.products)
+                {
+                    <tr>
+                        <td class="pl-2 pr-2">@c.Id.ToString("00")</td>
+                        <td class="pl-2 pr-2">@c.Sku</td>
+                        <td class="pl-2 pr-2">@c.Name</td>
+                        <td class="pl-2 pr-2">@c.Price.ToString("C")</td>
+                        <td class="td-center pl-2 pr-2">
+                            <a asp-page="./Edit" asp-route-customerId="@c.Id">
+                                <i class="material-icons icon">edit</i>
+                            </a>
+                        </td>
+                        <td class="td-center pl-2 pr-2">
+                            <a asp-page="./Delete" asp-route-customerId="@c.Id">
+                                <i class="material-icons icon">delete</i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+    @{
+
+        var prev = Model.pageResult.PreviousPage.HasValue ? "" : "disabled ";
+        var next = Model.pageResult.NextPage.HasValue ? "" : "disabled ";
+        var first = (Model.queryParamters.CurPage != 1 && Model.pageResult.TotalPages!=0) ? "" : "disabled ";
+        var last = (Model.queryParamters.CurPage != Model.pageResult.TotalPages && Model.pageResult.TotalPages != 0) ? "" : "disabled ";
+
+        parms["CurPage"] = "1";
+    }
+
+    <span class="d-inline-block me-5">
+        Items  @Model.pageResult.FirstRowOnPage &nbsp; to &nbsp; @Model.pageResult.LastRowOnPage &nbsp; of &nbsp; @Model.pageResult.TotalCount
+    </span>
+
+
+    <a class="btn d-inline-block me-2 @first" asp-all-route-data="parms">
+        First
+    </a>
+    @{
+        parms["CurPage"] = Model.pageResult.PreviousPage.ToString() ?? "";
+    }
+    <a class="btn d-inline-block me-2 @prev" asp-all-route-data="parms">
+        Prev
+    </a>
+
+    <span class="d-inline-block mx-2"> @Model.queryParamters.CurPage of @Model.pageResult.TotalPages </span>
+    
+    @{
+        parms["CurPage"] = Model.pageResult.NextPage.ToString() ?? "";
+    }
+    <a class="btn d-inline-block me-2 @next" asp-all-route-data="parms">
+        Next
+    </a>
+
+    @{
+        parms["CurPage"] = Model.pageResult.TotalPages.ToString() ?? "";
+    }
+    <a class="btn d-inline-block me-2 @last" asp-all-route-data="parms">
+        Last
+    </a>
+
+</form>

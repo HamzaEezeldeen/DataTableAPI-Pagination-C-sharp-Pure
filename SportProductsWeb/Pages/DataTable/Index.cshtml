@@ -1,0 +1,163 @@
+﻿@page
+@model SportProductsWeb.Pages.DataTable.IndexModel
+@{
+
+    var LstProducts = Json.Serialize(Model.ListOfProducts);
+}
+<link href="~/lib/datatables.net-bs5/datatables.bootstrap5.min.css" rel="stylesheet" asp-append-version="true" />
+<script src="~/lib/datatables.net-responsive/datatables.responsive.min.js"></script>
+<style>
+    .dataTables_filter {
+        text-align: left !important;
+    }
+
+        .dataTables_filter label, .dataTables_filter input {
+            width: 80% !important;
+        }
+
+    .dataTables_length {
+        text-align: right !important;
+    }
+
+    .dataTables_info {
+        padding: 0 !important;
+    }
+
+    table.dataTable thead tr {
+        background-color: #b2d9a0 !important;
+    }
+
+    table.dataTable .shown td.dt-control:before {
+        content: "-";
+        background-color: red
+    }
+</style>
+
+<table id="DataTableProducts" class="table table-striped table-active">
+    @*
+    <thead>
+    <tr>
+    <th scope="col">#</th>
+    <th scope="col">First</th>
+    <th scope="col">Last</th>
+    <th scope="col">Handle</th>
+    </tr>
+    </thead>*@
+</table>
+
+@section Scripts{
+    <script src="~/lib/datatables.net/jquery.datatables.min.js" asp-append-version="true"></script>
+    <script src="~/lib/datatables.net-bs5/datatables.bootstrap5.min.js" asp-append-version="true"></script>
+
+    <script>
+        $(document).ready(function () {
+            var table = $("#DataTableProducts").DataTable({
+                language: {
+                    paginate: {
+                        previous: "السابق",
+                        next: "التالي",
+                        last: "الاخير",
+                        first: "الاول"
+                    },
+                    sSearch: "البحث",
+                    info: "عرض _START_ من  _TOTAL_ ",
+                    lengthMenu: "عرض _MENU_ الادخالات"
+                },
+                pagingType: 'full_numbers',
+                data: @LstProducts,
+                dom: "<'row p-2'<'col-sm-12 col-md-6' f><'col-sm-12 col-md-6' p>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row bg-info p-2 my-1'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7' l>>",
+                columns: [
+                    {
+                        className: 'dt-control',
+                        orderable: false,
+                        data: null,
+                        defaultContent: '',
+                    },
+                    { data: "id", title: "ID", width: "10%", className: "fw-bold" },
+                    { data: "sku", title: "SKU", width: "10%" },
+                    { data: "name", title: "Title", width: "40%" },
+                    { data: "price", title: "Price", width: "15%" },
+                    {
+                        data: null, title: "IsAvailable", width: "10%",
+                        render: function (data, type, row) {
+                            if (type === "display") {
+                                //return `<div class="form-check form-switch"><input disabled class="form-check-input" ${row.isAvailable ? "checked" : ""} type="checkbox" role="switch" id="flexSwitchCheckDefault"></div>`;
+                                return row.isAvailable ? "<img src='https://th.bing.com/th?id=OIP.1-hJO7-Zuoh4M8SLkN3dXQHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2' width='40' height='40'/>" : "<img src='https://th.bing.com/th?id=OIP.aNv8X9iW5tyRZcGnWB9VtAHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2' width='40' heigth='40'/>";
+                            }
+                            return '';
+                        }
+                    },
+                    {
+                        data: null, title: "Price -10%",
+                        render: function (data, type, row) {
+                            if (type === "display") {
+                                var price = parseFloat(row.price).toFixed(2);
+                                price = price * (1 - 0.1);
+                                var number = $.fn.dataTable.render.number(',', '.', 2, '$').display(price);
+
+                                let color = 'text-danger';
+
+                                if (price > 50)
+                                    color = 'text-success';
+
+                                return `<span class="${color}">${number}</span>`;
+
+                            }
+                            return 0;
+
+                        }
+                    },
+                ]
+            });
+            $('#DataTableProducts tbody').on('click', 'td.dt-control', function () {
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    // Open this row
+                    row.child(format(row.data())).show();
+                    tr.addClass('shown');
+                }
+            });
+        });
+
+        function format(d) {
+            // `d` is the original data object for the row
+            return (
+                '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+                '<tr>' +
+                '<td>Full name:</td>' +
+                '<td>' +
+                d.sku +
+                '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td>Extension number:</td>' +
+                '<td>' +
+                d.name +
+                '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td>Extra info:</td>' +
+                '<td>And any further details here (images etc)...</td>' +
+                '</tr>' +
+                '</table>'
+            );
+        }
+
+
+
+    </script>
+
+}
+
+
+
+
+
